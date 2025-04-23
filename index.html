@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>CONTROLE DE CAIXAS PARADAS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  >
+  <style>
+    body { background-color: #f8f9fa; }
+    .container {
+      max-width: 800px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      padding: 30px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #2c503f;
+      font-size: 24px;
+      font-weight: bold;
+      text-align: center;
+      text-transform: uppercase;
+      margin-bottom: 30px !important;
+    }
+    .form-label { font-weight: 500; color: #495057; margin-bottom: 5px; }
+    .form-control, .form-select {
+      border-radius: 4px;
+      border: 1px solid #cedad0;
+      padding: 8px 12px;
+    }
+    .form-control:focus, .form-select:focus {
+      border-color: #86b7fe;
+      box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25);
+    }
+    .btn-primary {
+      width: 100%; padding: 10px; font-weight: bold;
+      text-transform: uppercase; background-color: #007bff;
+      border: none; margin-top: 20px;
+    }
+    .btn-primary:hover { background-color: #0056b3; }
+    .alert { margin-top: 20px; text-align: center; }
+    .readonly-field { background-color: #ecefe9; cursor: not-allowed; }
+    .navbar-nav { margin: 0 auto; display: flex; gap: 10px; }
+    .nav-link {
+      background-color: #f0f0f0; border-radius: 5px;
+      padding: 8px 16px; transition: background-color 0.3s ease;
+    }
+    .nav-link:hover { background-color: #d6e0f5; }
+    .nav-link.active { background-color: #0d6efd; color: white !important; }
+  </style>
+</head>
+<body class="p-4">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+    <div class="container-fluid justify-content-center">
+      <div class="collapse navbar-collapse show" id="navMenu">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link active" href="index.html">Formulário</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="dashboard.html">Dashboard</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1>CONTROLE DE CAIXAS PARADAS</h1>
+    <form id="caixaForm" novalidate>
+      <div class="mb-3">
+        <label for="volume" class="form-label">Volume</label>
+        <input type="text" id="volume" name="volume" class="form-control" required>
+      </div>
+
+      <div class="row g-3 mb-3">
+        <div class="col-4">
+          <label for="semana" class="form-label">Semana</label>
+          <input type="number" id="semana" name="semana" class="form-control readonly-field" readonly>
+        </div>
+        <div class="col-4">
+          <label for="marca" class="form-label">Marca</label>
+          <input type="text" id="marca" name="marca" class="form-control readonly-field" readonly>
+        </div>
+        <div class="col-4">
+          <label for="modelo" class="form-label">Modelo</label>
+          <input type="text" id="modelo" name="modelo" class="form-control readonly-field" readonly>
+        </div>
+      </div>
+
+      <div class="row g-3 mb-3">
+        <div class="col-6">
+          <label for="tamanho" class="form-label">Tamanho</label>
+          <input type="text" id="tamanho" name="tamanho" class="form-control readonly-field" readonly>
+        </div>
+        <div class="col-6">
+          <label for="quantidade" class="form-label">Quantidade</label>
+          <input type="text" id="quantidade" name="quantidade" class="form-control readonly-field" readonly>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="fornecedor" class="form-label">Fornecedor</label>
+        <select id="fornecedor" name="fornecedor" class="form-select" required>
+          <option value="">-- selecione o fornecedor --</option>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label for="defeito" class="form-label">Defeito</label>
+        <select id="defeito" name="defeito" class="form-select" disabled required>
+          <option value="">-- selecione o defeito --</option>
+        </select>
+      </div>
+
+      <div class="row g-3 mb-3">
+        <div class="col-4">
+          <label for="qtd_pares" class="form-label">Qtd Pares</label>
+          <input type="text" id="qtd_pares" name="qtd_pares" class="form-control">
+        </div>
+        <div class="col-4">
+          <label for="qtd_esquerdo" class="form-label">Qtd Esquerdo</label>
+          <input type="text" id="qtd_esquerdo" name="qtd_esquerdo" class="form-control">
+        </div>
+        <div class="col-4">
+          <label for="qtd_direito" class="form-label">Qtd Direito</label>
+          <input type="text" id="qtd_direito" name="qtd_direito" class="form-control">
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Registrar Caixa</button>
+    </form>
+
+    <div id="alertPlaceholder"></div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // Exibe alerta
+    function showAlert(message, type = 'success') {
+      const wrapper = document.getElementById('alertPlaceholder');
+      wrapper.innerHTML = `
+        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+          ${message}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>`;
+    }
+
+    // Carrega lista de fornecedores
+    async function loadFornecedores() {
+      try {
+        const res = await fetch('http://localhost:3000/fornecedores');
+        const json = await res.json();
+        if (!json.success) throw new Error(json.error || 'Erro');
+        const sel = document.getElementById('fornecedor');
+        json.data.forEach(f => {
+          const opt = document.createElement('option');
+          opt.value = f.fornecedor;
+          opt.textContent = f.fornecedor;
+          sel.appendChild(opt);
+        });
+      } catch (err) {
+        console.error(err);
+        showAlert('Não foi possível carregar fornecedores', 'danger');
+      }
+    }
+
+    // Ao mudar fornecedor, busca defeitos
+    document.getElementById('fornecedor').addEventListener('change', async e => {
+      const forn = e.target.value;
+      const defSel = document.getElementById('defeito');
+      defSel.innerHTML = '<option value="">-- selecione o defeito --</option>';
+      defSel.disabled = true;
+      if (!forn) return;
+      try {
+        const res = await fetch(`http://localhost:3000/defeitos?fornecedor=${encodeURIComponent(forn)}`);
+        const json = await res.json();
+        if (!json.success) throw new Error(json.error || 'Erro');
+        json.data.forEach(d => {
+          const opt = document.createElement('option');
+          opt.value = d.defeito;
+          opt.textContent = d.defeito;
+          defSel.appendChild(opt);
+        });
+        defSel.disabled = false;
+      } catch (err) {
+        console.error(err);
+        showAlert('Erro ao buscar defeitos', 'warning');
+      }
+    });
+
+    // Ao perder foco no volume, busca dados
+    document.getElementById('volume').addEventListener('blur', async e => {
+      const vol = e.target.value.trim();
+      if (!vol) return;
+      try {
+        const res = await fetch(`http://localhost:3000/get_volume?volume=${encodeURIComponent(vol)}`);
+        const json = await res.json();
+        ['semana','modelo','tamanho','quantidade','marca'].forEach(id => {
+          document.getElementById(id).value = json.success ? json.data[id] : '';
+        });
+        if (!json.success) showAlert('Volume não encontrado', 'warning');
+      } catch {
+        showAlert('Erro ao buscar volume', 'danger');
+      }
+    });
+    // Submissão do formulário agora monta JSON dinâmico
+    document.getElementById('caixaForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const form = e.target;
+
+      // garante obrigatórios
+      if (!form.volume.value.trim() || !form.fornecedor.value || !form.defeito.value) {
+        form.classList.add('was-validated');
+        return;
+      }
+
+      // monta objeto só com campos preenchidos
+      const data = {
+        volume: form.volume.value.trim(),
+        semana: form.semana.value,
+        modelo: form.modelo.value,
+        tamanho: form.tamanho.value,
+        fornecedor: form.fornecedor.value,
+        defeito: form.defeito.value,
+        marca: form.marca.value
+      };
+      ['qtd_pares','qtd_esquerdo','qtd_direito'].forEach(field => {
+        const v = form[field].value.trim();
+        if (v) data[field] = v;
+      });
+
+      try {
+        const res = await fetch('http://localhost:3000/save_caixa', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        const json = await res.json();
+        if (json.success) {
+          showAlert('Caixa registrada com sucesso!', 'success');
+          form.reset();
+          ['semana','modelo','tamanho','quantidade','marca'].forEach(id =>
+            document.getElementById(id).value = ''
+          );
+          document.getElementById('defeito').disabled = true;
+          form.classList.remove('was-validated');
+        } else {
+          showAlert(`Erro: ${json.error}`, 'danger');
+        }
+      } catch {
+        showAlert('Falha na requisição.', 'danger');
+      }
+    });
+
+    // Inicialização
+    loadFornecedores();
+  </script>
+</body>
+</html>
