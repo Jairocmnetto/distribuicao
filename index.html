@@ -64,7 +64,7 @@
             <a class="nav-link" href="dashboard.html">Dashboard</a>
           </li>
         </ul>
-      </div>
+      </div>  
     </div>
   </nav>
 
@@ -167,7 +167,7 @@
     // Carrega lista de fornecedores
     async function loadFornecedores() {
       try {
-        const res = await fetch('http://localhost:3000/fornecedores');
+        const res = await fetch('http://10.109.0.12:5003/fornecedores');
         const json = await res.json();
         if (!json.success) throw new Error(json.error || 'Erro');
         const sel = document.getElementById('fornecedor');
@@ -191,7 +191,7 @@
       defSel.disabled = true;
       if (!forn) return;
       try {
-        const res = await fetch(`http://localhost:3000/defeitos?fornecedor=${encodeURIComponent(forn)}`);
+        const res = await fetch(`http://10.109.0.12:5003/defeitos?fornecedor=${encodeURIComponent(forn)}`);
         const json = await res.json();
         if (!json.success) throw new Error(json.error || 'Erro');
         json.data.forEach(d => {
@@ -212,7 +212,7 @@
       const vol = e.target.value.trim();
       if (!vol) return;
       try {
-        const res = await fetch(`http://localhost:3000/get_volume?volume=${encodeURIComponent(vol)}`);
+        const res = await fetch(`http://10.109.0.12:5003/get_volume?volume=${encodeURIComponent(vol)}`);
         const json = await res.json();
         ['semana','modelo','tamanho','quantidade','marca'].forEach(id => {
           document.getElementById(id).value = json.success ? json.data[id] : '';
@@ -249,7 +249,7 @@
       });
 
       try {
-        const res = await fetch('http://localhost:3000/save_caixa', {
+        const res = await fetch('http://10.109.0.12:5003/save_caixa', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data)
